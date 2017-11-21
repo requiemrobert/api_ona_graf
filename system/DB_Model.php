@@ -147,18 +147,56 @@
 
     $response_query = $this->set_query($sql);
       
-      print_r($response_query);
-
-      exit();
       if ($response_query) {
-          return $this->response_json(200, $response_query, "consulta exitosa");
+          return $this->response_json(200, $response_query, "registro exitoso");
       }else{
-          return $this->response_json(-200, $response_query, "usuario o contraseña no son válidos");
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
       }
 
   }  
 
+  public function consultar_cliente(){ 
 
+    $sql  = ' SELECT cliente.nombre_cliente AS nombre,';
+    $sql .= ' cliente.apellido_cliente AS apellido,'; 
+    $sql .= " concat_ws('-', cliente.pre_doc_cliente , cliente.doc_cliente ) AS documento,";
+    $sql .= ' cliente.telf_cliente AS telefono,';
+    $sql .= ' cliente.otro_telf_cliente AS otro_tefl,';
+    $sql .= ' cliente.email_cliente AS email,';
+    $sql .= ' cliente.tipo_cliente,';
+    $sql .= ' cliente.rason_social_cliente AS rason_social';
+    $sql .= ' FROM cliente';
+  
+    return json_encode( ['data' => $this->get_query($sql)] );
+
+  }  
+
+  public function modificar_cliente(array $dataArray){ 
+
+    extract($dataArray);
+
+    $sql  = " UPDATE `cliente` SET";
+    $sql .= " nombre_cliente = '$nombre_cliente',";
+    $sql .= " apellido_cliente = '$apellido_cliente',";
+    $sql .= " pre_doc_cliente = '$pre_doc_cliente',"; 
+    $sql .= " doc_cliente = '$new_doc_cliente',";
+    $sql .= " email_cliente = '$email_cliente',";
+    $sql .= " rason_social_cliente = '$rason_social_cliente',";
+    $sql .= " direccion_cliente = '$direccion_cliente',";
+    $sql .= " telf_cliente = '$telf_cliente',";
+    $sql .= " otro_telf_cliente = '$otro_telf_cliente',";
+    $sql .= " tipo_cliente = '$tipo_cliente'";
+    $sql .= " WHERE doc_cliente = '$doc_cliente';";
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "Actualizacion exitosa");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }
 
   protected function no_response(){
 

@@ -34,6 +34,18 @@ class InterfaceLayer extends DB_Model
 		            
 		      break;
 
+		      case 'consultar_cliente':
+
+		        echo $this->consultar_cliente();
+		            
+		      break;
+
+		      case 'modificar_cliente':
+
+		        echo $this->modificar_cliente($dataArray['data']);
+		            
+		      break;
+
 		      case 'ping':
 
 		        echo $this->ping($dataArray['data']);
