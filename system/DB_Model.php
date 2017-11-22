@@ -24,13 +24,15 @@
 
   }
 
-  public function get_login($dataArray = array()){
+  public function get_login(array $dataArray){
+
+    extract($dataArray);
 
     $array_field = $this->get_fields_query(["status", "user_name", "email"]);
     
-    $sql = "SELECT $array_field FROM usuario WHERE user_name = ? AND password = ?";
+    $sql = "SELECT $array_field FROM usuario WHERE user_name = '$user_name' AND password = '$password';";
 
-    $response_query = $this->execute_query_login($dataArray, $sql);
+    $response_query = $this->get_query($sql);
       
       if ($response_query) {
           return $this->response_json(200, $response_query, "consulta exitosa");

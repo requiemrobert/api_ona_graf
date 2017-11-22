@@ -17,7 +17,7 @@ class InterfaceLayer extends DB_Model
    
 		  switch ($dataArray['rc']):
 		      case 'get_login':
-					
+
 		        echo $this->get_login($dataArray['data']);
 		            
 		      break;
