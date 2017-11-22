@@ -164,7 +164,8 @@
     $sql .= ' cliente.otro_telf_cliente AS otro_tefl,';
     $sql .= ' cliente.email_cliente AS email,';
     $sql .= ' cliente.tipo_cliente,';
-    $sql .= ' cliente.rason_social_cliente AS rason_social';
+    $sql .= ' cliente.rason_social_cliente AS rason_social,';
+    $sql .= ' cliente.direccion_cliente AS direccion';
     $sql .= ' FROM cliente';
   
     return json_encode( ['data' => $this->get_query($sql)] );
@@ -194,6 +195,23 @@
           return $this->response_json(200, $response_query, "Actualizacion exitosa");
       }else{
           return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }
+
+  public function eliminar_cliente(array $dataArray){ 
+
+    extract($dataArray);
+
+    $sql  = " DELETE FROM `cliente`";
+    $sql .= " WHERE doc_cliente = '$documento';";
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "Registro Eliminado exitosamente");
+      }else{
+          return $this->response_json(-200, $response_query, "No se pudo realizar la accion");
       }
 
   }
