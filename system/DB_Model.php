@@ -144,7 +144,6 @@
 
   public function registrar_cliente(array $dataArray){
 
-    
     $sql = 'INSERT INTO CLIENTE ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
 
     $response_query = $this->set_query($sql);
@@ -217,6 +216,35 @@
       }
 
   }
+
+  public function registrar_stock_MP(array $dataArray){
+
+    $sql = 'INSERT INTO stock ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "registro exitoso");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }
+
+  public function consultar_stock_MP(array $dataArray){
+
+    $sql = 'INSERT INTO stock ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "registro exitoso");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }  
+
 
   protected function no_response(){
 
