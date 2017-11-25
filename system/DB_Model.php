@@ -59,7 +59,7 @@
     $sql .= " INNER JOIN perfil ON usuario.id_perfil_fk = perfil.id_perfil"; 
     $sql .= " INNER JOIN autorizacion ON autorizacion.id_perfil_fk = perfil.id_perfil";
     $sql .= " INNER JOIN modulo ON autorizacion.id_modulo_fk = modulo.id_modulo"; 
-    $sql .= " WHERE usuario.`user_name` = '$user_name' AND autorizacion.acceso = $status";
+    $sql .= " WHERE usuario.`user_name` = '$user_name' AND autorizacion.acceso = 1 AND modulo.activo =1";//modulo activo
     $sql .= " order by  padre_descripcion";
 
     $response_query = $this->get_query($sql); 
@@ -341,6 +341,21 @@
     return json_encode( ['data' => $this->get_query($sql)] );
 
   } 
+
+  public function consultar_disponible_MP(){
+
+    $sql  = 'SELECT material.id_material, material.tipo_material, material.cantidad_disponible';
+    $sql  .= " FROM material";
+
+    $response_query = $this->get_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "consula exitosa");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar la consulta");
+      }
+
+  }
 
 
   protected function no_response(){

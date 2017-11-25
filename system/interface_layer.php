@@ -88,6 +88,12 @@ class InterfaceLayer extends DB_Model
 		            
 		      break;
 
+		      case 'consultar_disponible_MP':
+
+		        echo $this->consultar_disponible_MP();
+		            
+		      break;
+
 		      case 'ping':
 
 		        echo $this->ping($dataArray['data']);
