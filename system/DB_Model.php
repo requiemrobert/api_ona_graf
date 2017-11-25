@@ -141,7 +141,6 @@
 
   }
 
-
   public function registrar_cliente(array $dataArray){
 
     $sql = 'INSERT INTO CLIENTE ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
@@ -217,13 +216,31 @@
 
   }
 
-  public function registrar_stock_MP(array $dataArray){
+  public function registrar_Stock_MP(array $dataArray){
 
-    $sql = 'INSERT INTO stock ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
+    $sql_insert = 'INSERT INTO stock ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
 
-    $response_query = $this->set_query($sql);
+    extract($dataArray);
+
+    $sql_material_actual  = 'SELECT material.id_material, material.tipo_material, material.cantidad_disponible';
+    $sql_material_actual .= " FROM material WHERE tipo_material ='$tipo_material'";
+
+    $cantidad_disponible = $this->get_query($sql_material_actual);
+
+    $res_tipo_material = $cantidad_disponible[0]['tipo_material'];
+    $res_cantidad_disponible = $cantidad_disponible[0]['cantidad_disponible'];
+
+    $cantidad_actual  = ($unidades * $cantidad_material) + $res_cantidad_disponible;
+
+    $sql_material  = 'UPDATE material set';
+    $sql_material .= " cantidad_disponible = $cantidad_actual";
+    $sql_material .= " where tipo_material = '$tipo_material'";
+
+    $update_succes = $this->set_query($sql_material);
+
+    $response_query = $this->set_query($sql_insert);
       
-      if ($response_query) {
+      if ($response_query &&  $update_succes) {
           return $this->response_json(200, $response_query, "registro exitoso");
       }else{
           return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
@@ -231,9 +248,69 @@
 
   }
 
-  public function consultar_stock_MP(array $dataArray){
+  public function consultar_Stock_MP(){
 
-    $sql = 'INSERT INTO stock ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
+    $sql =  ' SELECT stock.tipo_material,';
+    $sql .= ' stock.id_stock,';
+    $sql .= ' stock.cantidad_material,';
+    $sql .= ' stock.unidades,';
+    $sql .= ' stock.precio,';
+    $sql .= ' stock.fecha_registro,';
+    $sql .= ' stock.descripcion';
+    $sql .= ' FROM stock';
+
+    $response_query = $this->get_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "consulta exitosa");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar la consulta");
+      }
+
+  }  
+
+  public function modificar_Stock_MP(array $dataArray){ 
+
+    extract($dataArray);
+  
+    $sql  = " UPDATE `stock` SET";
+    $sql .= " tipo_material = '$tipo_material',";
+    $sql .= " unidades = '$unidades',"; 
+    $sql .= " precio = '$precio',";
+    $sql .= " fecha_registro = '$fecha_registro',";
+    $sql .= " descripcion = '$descripcion'";
+    $sql .= " WHERE id_stock = '$id_stock';";
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "Actualizacion exitosa");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }
+
+  public function eliminar_Stock_MP(array $dataArray){ 
+
+    extract($dataArray);
+
+    $sql  = " DELETE FROM `stock`";
+    $sql .= " WHERE id_stock = '$id_stock';";
+
+    $response_query = $this->set_query($sql);
+      
+      if ($response_query) {
+          return $this->response_json(200, $response_query, "Registro Eliminado exitosamente");
+      }else{
+          return $this->response_json(-200, $response_query, "No se pudo realizar la accion");
+      }
+
+  }
+
+  public function registrar_proveedor(array $dataArray){
+
+    $sql = 'INSERT INTO proveedor ('. $this->fields_query($dataArray) .') VALUES ('. $this->values_query($dataArray) .')';
 
     $response_query = $this->set_query($sql);
       
@@ -243,7 +320,27 @@
           return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
       }
 
-  }  
+  } 
+
+  public function consultar_proveedor(){
+
+    $sql  = ' SELECT ';
+    $sql .= ' proveedor.cod_proveedor,'; 
+    $sql .= ' proveedor.razon_social_proveedor,';
+    $sql .= ' proveedor.nombre_contacto,';
+    $sql .= ' proveedor.pre_rif,';
+    $sql .= ' proveedor.rif,';
+    $sql .= ' proveedor.telf,';
+    $sql .= ' proveedor.otro_telf,';
+    $sql .= ' proveedor.email,';
+    $sql .= ' proveedor.direccion,';
+    $sql .= ' proveedor.tipo_proveedor,';
+    $sql .= ' proveedor.tipo_actividad';
+    $sql .= ' FROM proveedor';
+  
+    return json_encode( ['data' => $this->get_query($sql)] );
+
+  } 
 
 
   protected function no_response(){
