@@ -357,6 +357,56 @@
 
   }
 
+  public function actualizar_MP(array $dataArray){
+
+    extract($dataArray);
+
+    $sql_rollo  = " UPDATE `material` SET";
+    $sql_rollo .= " cantidad_disponible = '$cantidad_rollo'";
+    $sql_rollo .= " WHERE tipo_material = 'rollo';";
+
+    $sql_carton  = " UPDATE `material` SET";
+    $sql_carton .= " cantidad_disponible = '$cantidad_carton'";
+    $sql_carton .= " WHERE tipo_material = 'carton';";
+
+    $sql_goma  = " UPDATE `material` SET";
+    $sql_goma .= " cantidad_disponible = '$cantidad_goma'";
+    $sql_goma .= " WHERE tipo_material = 'goma';";
+
+    $sql_resma  = " UPDATE `material` SET";
+    $sql_resma .= " cantidad_disponible = '$cantidad_resma'";
+    $sql_resma .= " WHERE tipo_material = 'resma';";
+
+    $sql_insert  = 'INSERT INTO orden_produccion ( producto, cantidad_producto, fecha_orden )';
+    $sql_insert .= " VALUES ( '$producto', '$cantidad_producto', NOW() )";
+
+    $response_rollo  = $this->set_query($sql_rollo);
+    $response_carton = $this->set_query($sql_carton);
+    $response_goma   = $this->set_query($sql_goma);
+    $response_resma  = $this->set_query($sql_resma);
+    $response_insert = $this->set_query($sql_insert);
+      
+      if ($response_rollo && $response_carton && $response_goma && $response_resma && $response_insert) {
+          return $this->response_json(200, null, "registro exitoso");
+      }else{
+          return $this->response_json(-200, $response_query, "no se pudo realizar el registro");
+      }
+
+  }
+
+  public function consultar_Stock_Disponible(){
+
+    $sql  = ' SELECT ';
+    $sql .= ' orden_produccion.cod_orden,'; 
+    $sql .= ' orden_produccion.producto,';
+    $sql .= ' orden_produccion.cantidad_producto,';
+    $sql .= ' orden_produccion.fecha_orden';
+    $sql .= ' FROM orden_produccion';
+  
+    return json_encode( ['data' => $this->get_query($sql)] );
+
+  } 
+
 
   protected function no_response(){
 

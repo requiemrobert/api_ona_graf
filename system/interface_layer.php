@@ -94,6 +94,18 @@ class InterfaceLayer extends DB_Model
 		            
 		      break;
 
+		      case 'actualizar_MP':
+
+		        echo $this->actualizar_MP($dataArray['data']);
+		            
+		      break;
+
+		      case 'consultar_Stock_Disponible':
+
+		        echo $this->consultar_Stock_Disponible();
+		            
+		      break;
+
 		      case 'ping':
 
 		        echo $this->ping($dataArray['data']);
